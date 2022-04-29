@@ -1,11 +1,19 @@
-name: Super-Linter
+name: Show alf
 
 on: push
 
 jobs:
-  super-lint:
-    name: Lint code base
-    runs-on: windows
+  echo:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        unity-version: [2020.3.3f1]
     steps:
-      - name: Run a one-line script
-        run: echo Hello, world!
+    - run: echo -n -e "HELLO\n !\n World!" > text.txt
+
+    - uses: pCYSl5EDgo/setup-unity@master
+      with:
+        unity-version: ${{ matrix.unity-version }}
+
+    - run: /opt/Unity/Editor/Unity -quit -batchMode -logFile -noGraphics -createManualActivationFile || exit 0
+    - run: cat Unity_v${{ matrix.unity-version }}.alf
